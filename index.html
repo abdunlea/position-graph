@@ -11,55 +11,59 @@
     
     <div class="container">
         <div class="grid-container">
+            <!-- Top Left: y(t) vs t -->
+            <div class="canvas-wrapper">
+                <canvas id="ytCanvas" width="400" height="400"></canvas>
+                <div class="canvas-label">Y vs Time</div>
+            </div>
+            
+            <!-- Top Right: y vs x -->
             <div class="canvas-wrapper">
                 <canvas id="xyCanvas" width="400" height="400"></canvas>
                 <div class="canvas-label">XY Position Grid</div>
             </div>
             
+            <!-- Bottom Left: Instructions -->
+            <div class="instructions-box">
+                <h3>📖 Instructions</h3>
+                <ul>
+                    <li><strong>Drag the ball</strong> on the XY grid or <strong>click anywhere</strong> to launch it</li>
+                    <li>The <strong>green arrow</strong> shows the velocity vector</li>
+                    <li>Watch how graphs update in real-time!</li>
+                    <li>Click <strong>Switch Graph</strong> to toggle between x(t) and t(x)</li>
+                </ul>
+                
+                <div class="controls">
+                    <button id="resetBtn">Reset</button>
+                    <button id="clearTrailBtn">Clear Trail</button>
+                    <button id="switchGraphBtn">Switch to T(X)</button>
+                </div>
+                
+                <div class="info">
+                    <div class="info-row">
+                        <span class="info-label">Position:</span>
+                        <span id="posInfo">x: 5.0m, y: 5.0m</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Velocity:</span>
+                        <span id="velInfo">vx: 0.0m/s, vy: 0.0m/s</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Speed:</span>
+                        <span id="speedInfo">0.0 m/s</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Time:</span>
+                        <span id="timeInfo">0.0 s</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Right: x(t) vs t (switchable to t(x)) -->
             <div class="canvas-wrapper">
-                <canvas id="xtCanvas" width="400" height="180"></canvas>
-                <div class="canvas-label">X vs Time (t-x)</div>
+                <canvas id="xtCanvas" width="400" height="400"></canvas>
+                <div class="canvas-label" id="xtLabel">X vs Time</div>
             </div>
-            
-            <div style="grid-column: 1 / -1;">
-                <canvas id="ytCanvas" width="820" height="180"></canvas>
-                <div class="canvas-label" style="position: relative; top: -180px; left: 10px;">Y vs Time (t-y)</div>
-            </div>
-        </div>
-        
-        <div class="controls">
-            <button id="resetBtn">Reset</button>
-            <button id="clearTrailBtn">Clear Trail</button>
-            
-            <div class="info">
-                <div class="info-row">
-                    <span class="info-label">Position:</span>
-                    <span id="posInfo">x: 0.0m, y: 0.0m</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Velocity:</span>
-                    <span id="velInfo">vx: 0.0m/s, vy: 0.0m/s</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Speed:</span>
-                    <span id="speedInfo">0.0 m/s</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Time:</span>
-                    <span id="timeInfo">0.0 s</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="instructions">
-            <h3>📖 Instructions</h3>
-            <ul>
-                <li><strong>Drag the ball</strong> on the XY grid to launch it with velocity</li>
-                <li>The <strong>t-x graph</strong> shows horizontal position over time</li>
-                <li>The <strong>t-y graph</strong> shows vertical position over time (with gravity)</li>
-                <li>Watch how the ball follows a parabolic path due to gravity!</li>
-                <li>Click <strong>Reset</strong> to return the ball to the starting position</li>
-            </ul>
         </div>
     </div>
 

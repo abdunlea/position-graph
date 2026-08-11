@@ -2,12 +2,12 @@
 
 // Get canvas elements
 const xyCanvas = document.getElementById('xyCanvas');
-const xtCanvas = document.getElementById('xtCanvas');
 const ytCanvas = document.getElementById('ytCanvas');
+const xtCanvas = document.getElementById('xtCanvas');
 
 const xyCtx = xyCanvas.getContext('2d');
-const xtCtx = xtCanvas.getContext('2d');
 const ytCtx = ytCanvas.getContext('2d');
+const xtCtx = xtCanvas.getContext('2d');
 
 // Update info display
 function updateInfo() {
@@ -27,8 +27,8 @@ function animate() {
     }
     
     drawXYGrid(xyCtx, xyCanvas);
-    drawXTGraph(xtCtx, xtCanvas);
     drawYTGraph(ytCtx, ytCanvas);
+    drawXTGraph(xtCtx, xtCanvas, graphMode);
     updateInfo();
     
     requestAnimationFrame(animate);
@@ -46,27 +46,54 @@ function getMousePos(canvas, e) {
     };
 }
 
+// Launch ball with velocity from current position
+function launchBall(targetX, targetY) {
+    dragStartX = ball.x;
+    dragStartY = ball.y;
+    
+    ball.x = targetX;
+    ball.y = targetY;
+    
+    ball.vx = (ball.x - dragStartX) * 3;
+    ball.vy = (ball.y - dragStartY) * 3;
+    
+    isAnimating = true;
+    isDragging = false;
+    
+    // Clear trails for new throw
+    xtTrail = [{ t: 0, x: ball.x }];
+    ytTrail = [{ t: 0, y: ball.y }];
+    xyTrail = [{ x: ball.x, y: ball.y }];
+    time = 0;
+}
+
 // Mouse event handlers for XY canvas
 xyCanvas.addEventListener('mousedown', (e) => {
     const mousePos = getMousePos(xyCanvas, e);
-    const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
+    const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.width, xyCanvas.height);
     
     const dx = pos.x - ball.x;
     const dy = pos.y - ball.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     
-    if (dist < ball.radius * 2) { // Increased hitbox
+    if (dist < ball.radius * 2) {
+        // Clicked on ball - start dragging
         isDragging = true;
         isAnimating = false;
         dragStartX = ball.x;
         dragStartY = ball.y;
+    } else {
+        // Clicked elsewhere - launch ball there
+        const targetX = Math.max(ball.radius, Math.min(10 - ball.radius, pos.x));
+        const targetY = Math.max(ball.radius, Math.min(10 - ball.radius, pos.y));
+        launchBall(targetX, targetY);
     }
 });
 
 xyCanvas.addEventListener('mousemove', (e) => {
     if (isDragging) {
         const mousePos = getMousePos(xyCanvas, e);
-        const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
+        const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.width, xyCanvas.height);
         
         ball.x = Math.max(ball.radius, Math.min(10 - ball.radius, pos.x));
         ball.y = Math.max(ball.radius, Math.min(10 - ball.radius, pos.y));
@@ -96,7 +123,7 @@ xyCanvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     const touch = e.touches[0];
     const mousePos = getMousePos(xyCanvas, touch);
-    const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
+    const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.width, xyCanvas.height);
     
     const dx = pos.x - ball.x;
     const dy = pos.y - ball.y;
@@ -107,6 +134,10 @@ xyCanvas.addEventListener('touchstart', (e) => {
         isAnimating = false;
         dragStartX = ball.x;
         dragStartY = ball.y;
+    } else {
+        const targetX = Math.max(ball.radius, Math.min(10 - ball.radius, pos.x));
+        const targetY = Math.max(ball.radius, Math.min(10 - ball.radius, pos.y));
+        launchBall(targetX, targetY);
     }
 });
 
@@ -115,7 +146,7 @@ xyCanvas.addEventListener('touchmove', (e) => {
     if (isDragging) {
         const touch = e.touches[0];
         const mousePos = getMousePos(xyCanvas, touch);
-        const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
+        const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.width, xyCanvas.height);
         
         ball.x = Math.max(ball.radius, Math.min(10 - ball.radius, pos.x));
         ball.y = Math.max(ball.radius, Math.min(10 - ball.radius, pos.y));
@@ -130,6 +161,19 @@ xyCanvas.addEventListener('touchend', (e) => {
 // Button event handlers
 document.getElementById('resetBtn').addEventListener('click', resetSimulation);
 document.getElementById('clearTrailBtn').addEventListener('click', clearTrails);
+document.getElementById('switchGraphBtn').addEventListener('click', () => {
+    const newMode = toggleGraphMode();
+    const btn = document.getElementById('switchGraphBtn');
+    const label = document.getElementById('xtLabel');
+    
+    if (newMode === 'tx') {
+        btn.textContent = 'Switch to X(T)';
+        label.textContent = 'Time vs X';
+    } else {
+        btn.textContent = 'Switch to T(X)';
+        label.textContent = 'X vs Time';
+    }
+});
 
 // Start animation
 animate();

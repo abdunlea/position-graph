@@ -3,7 +3,6 @@
 // Physics constants
 const GRAVITY = 9.8; // m/s²
 const SCALE = 40; // pixels per meter
-const TIME_SCALE = 80; // pixels per second for time graphs
 const DT = 0.016; // time step (60 FPS)
 
 // Ball state
@@ -22,6 +21,7 @@ let isAnimating = false;
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
+let graphMode = 'xt'; // 'xt' or 'tx'
 
 // Trail data
 let xtTrail = [];
@@ -29,7 +29,7 @@ let ytTrail = [];
 let xyTrail = [];
 
 // Convert canvas coordinates to physics coordinates
-function canvasToPhysics(canvasX, canvasY, canvasHeight) {
+function canvasToPhysics(canvasX, canvasY, canvasWidth, canvasHeight) {
     return {
         x: canvasX / SCALE,
         y: (canvasHeight - canvasY) / SCALE
@@ -111,4 +111,10 @@ function clearTrails() {
     xtTrail = (ball.vx !== 0 || ball.vy !== 0) ? [{ t: time, x: ball.x }] : [];
     ytTrail = (ball.vx !== 0 || ball.vy !== 0) ? [{ t: time, y: ball.y }] : [];
     xyTrail = (ball.vx !== 0 || ball.vy !== 0) ? [{ x: ball.x, y: ball.y }] : [];
+}
+
+// Toggle graph mode
+function toggleGraphMode() {
+    graphMode = graphMode === 'xt' ? 'tx' : 'xt';
+    return graphMode;
 }
