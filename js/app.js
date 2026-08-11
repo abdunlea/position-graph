@@ -55,14 +55,11 @@ xyCanvas.addEventListener('mousedown', (e) => {
     const dy = pos.y - ball.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     
-    console.log('Click detected:', { dist, threshold: ball.radius * 2 }); // Debug
-    
     if (dist < ball.radius * 2) { // Increased hitbox
         isDragging = true;
         isAnimating = false;
         dragStartX = ball.x;
         dragStartY = ball.y;
-        console.log('Dragging started'); // Debug
     }
 });
 
@@ -82,8 +79,6 @@ function handleDragEnd() {
         ball.vy = (ball.y - dragStartY) * 3;
         isDragging = false;
         isAnimating = true;
-        
-        console.log('Launch velocity:', { vx: ball.vx, vy: ball.vy }); // Debug
         
         // Clear trails for new throw
         xtTrail = [{ t: 0, x: ball.x }];
