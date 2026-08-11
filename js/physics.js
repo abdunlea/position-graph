@@ -4,6 +4,7 @@
 const GRAVITY = 9.8; // m/s²
 const SCALE = 40; // pixels per meter
 const DT = 0.016; // time step (60 FPS)
+const MAX_TIME = 10; // Maximum time before reset (10 seconds = 400 pixels)
 
 // Ball state
 const ball = {
@@ -74,9 +75,18 @@ function updatePhysics() {
     // Update time
     time += DT;
     
-    // Record trail
-    xtTrail.push({ t: time, x: ball.x });
-    ytTrail.push({ t: time, y: ball.y });
+    // Check if time exceeds grid bounds - if so, reset time and clear trails
+    if (time > MAX_TIME) {
+        time = 0;
+        xtTrail = [{ t: 0, x: ball.x }];
+        ytTrail = [{ t: 0, y: ball.y }];
+        // Keep xy trail since it doesn't depend on time
+    } else {
+        // Record trail normally
+        xtTrail.push({ t: time, x: ball.x });
+        ytTrail.push({ t: time, y: ball.y });
+    }
+    
     xyTrail.push({ x: ball.x, y: ball.y });
     
     // Limit trail length
