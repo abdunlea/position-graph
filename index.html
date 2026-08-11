@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Motion Simulator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <h1>🎯 Physics Motion Simulator</h1>
+    
+    <div class="container">
+        <div class="grid-container">
+            <div class="canvas-wrapper">
+                <canvas id="xyCanvas" width="400" height="400"></canvas>
+                <div class="canvas-label">XY Position Grid</div>
+            </div>
+            
+            <div class="canvas-wrapper">
+                <canvas id="xtCanvas" width="400" height="180"></canvas>
+                <div class="canvas-label">X vs Time (t-x)</div>
+            </div>
+            
+            <div style="grid-column: 1 / -1;">
+                <canvas id="ytCanvas" width="820" height="180"></canvas>
+                <div class="canvas-label" style="position: relative; top: -180px; left: 10px;">Y vs Time (t-y)</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="resetBtn">Reset</button>
+            <button id="clearTrailBtn">Clear Trail</button>
+            
+            <div class="info">
+                <div class="info-row">
+                    <span class="info-label">Position:</span>
+                    <span id="posInfo">x: 0.0m, y: 0.0m</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Velocity:</span>
+                    <span id="velInfo">vx: 0.0m/s, vy: 0.0m/s</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Speed:</span>
+                    <span id="speedInfo">0.0 m/s</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Time:</span>
+                    <span id="timeInfo">0.0 s</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📖 Instructions</h3>
+            <ul>
+                <li><strong>Drag the ball</strong> on the XY grid to launch it with velocity</li>
+                <li>The <strong>t-x graph</strong> shows horizontal position over time</li>
+                <li>The <strong>t-y graph</strong> shows vertical position over time (with gravity)</li>
+                <li>Watch how the ball follows a parabolic path due to gravity!</li>
+                <li>Click <strong>Reset</strong> to return the ball to the starting position</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="js/physics.js"></script>
+    <script src="js/graphics.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
