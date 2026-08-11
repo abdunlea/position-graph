@@ -11,10 +11,10 @@
     
     <div class="container">
         <div class="grid-container">
-            <!-- Top Left: y(t) vs t -->
+            <!-- Top Left: y(t) vs t (toggleable to y only) -->
             <div class="canvas-wrapper">
                 <canvas id="ytCanvas" width="400" height="400"></canvas>
-                <div class="canvas-label">Y vs Time</div>
+                <div class="canvas-label" id="ytLabel">Y vs Time</div>
             </div>
             
             <!-- Top Right: y vs x -->
@@ -29,14 +29,15 @@
                 <ul>
                     <li><strong>Drag the ball</strong> on the XY grid or <strong>click anywhere</strong> to launch it</li>
                     <li>The <strong>green arrow</strong> shows the velocity vector</li>
-                    <li>Watch how graphs update in real-time!</li>
-                    <li>Click <strong>Switch Graph</strong> to toggle between x(t) and t(x)</li>
+                    <li>Toggle graphs to align horizontally with XY grid</li>
+                    <li>Graphs auto-reset when time exceeds 10 seconds</li>
                 </ul>
                 
                 <div class="controls">
                     <button id="resetBtn">Reset</button>
                     <button id="clearTrailBtn">Clear Trail</button>
-                    <button id="switchGraphBtn">Switch to T(X)</button>
+                    <button id="switchYBtn">Y Only</button>
+                    <button id="switchXBtn">X Only</button>
                 </div>
                 
                 <div class="info">
@@ -59,7 +60,7 @@
                 </div>
             </div>
             
-            <!-- Bottom Right: x(t) vs t (switchable to t(x)) -->
+            <!-- Bottom Right: x(t) vs t (toggleable to x only) -->
             <div class="canvas-wrapper">
                 <canvas id="xtCanvas" width="400" height="400"></canvas>
                 <div class="canvas-label" id="xtLabel">X vs Time</div>

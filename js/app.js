@@ -27,8 +27,8 @@ function animate() {
     }
     
     drawXYGrid(xyCtx, xyCanvas);
-    drawYTGraph(ytCtx, ytCanvas);
-    drawXTGraph(xtCtx, xtCanvas, graphMode);
+    drawYGraph(ytCtx, ytCanvas, yGraphMode);
+    drawXGraph(xtCtx, xtCanvas, xGraphMode);
     updateInfo();
     
     requestAnimationFrame(animate);
@@ -161,16 +161,31 @@ xyCanvas.addEventListener('touchend', (e) => {
 // Button event handlers
 document.getElementById('resetBtn').addEventListener('click', resetSimulation);
 document.getElementById('clearTrailBtn').addEventListener('click', clearTrails);
-document.getElementById('switchGraphBtn').addEventListener('click', () => {
-    const newMode = toggleGraphMode();
-    const btn = document.getElementById('switchGraphBtn');
+
+document.getElementById('switchYBtn').addEventListener('click', () => {
+    const newMode = toggleYGraphMode();
+    const btn = document.getElementById('switchYBtn');
+    const label = document.getElementById('ytLabel');
+    
+    if (newMode === 'y') {
+        btn.textContent = 'Y vs Time';
+        label.textContent = 'Y Position';
+    } else {
+        btn.textContent = 'Y Only';
+        label.textContent = 'Y vs Time';
+    }
+});
+
+document.getElementById('switchXBtn').addEventListener('click', () => {
+    const newMode = toggleXGraphMode();
+    const btn = document.getElementById('switchXBtn');
     const label = document.getElementById('xtLabel');
     
-    if (newMode === 'tx') {
-        btn.textContent = 'Switch to X(T)';
-        label.textContent = 'Time vs X';
+    if (newMode === 'x') {
+        btn.textContent = 'X vs Time';
+        label.textContent = 'X Position';
     } else {
-        btn.textContent = 'Switch to T(X)';
+        btn.textContent = 'X Only';
         label.textContent = 'X vs Time';
     }
 });

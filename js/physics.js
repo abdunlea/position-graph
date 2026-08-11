@@ -22,7 +22,8 @@ let isAnimating = false;
 let isDragging = false;
 let dragStartX = 0;
 let dragStartY = 0;
-let graphMode = 'xt'; // 'xt' or 'tx'
+let yGraphMode = 'yt'; // 'yt' (y vs time) or 'y' (y only, horizontal)
+let xGraphMode = 'xt'; // 'xt' (x vs time) or 'x' (x only, horizontal)
 
 // Trail data
 let xtTrail = [];
@@ -123,8 +124,14 @@ function clearTrails() {
     xyTrail = (ball.vx !== 0 || ball.vy !== 0) ? [{ x: ball.x, y: ball.y }] : [];
 }
 
-// Toggle graph mode
-function toggleGraphMode() {
-    graphMode = graphMode === 'xt' ? 'tx' : 'xt';
-    return graphMode;
+// Toggle Y graph mode
+function toggleYGraphMode() {
+    yGraphMode = yGraphMode === 'yt' ? 'y' : 'yt';
+    return yGraphMode;
+}
+
+// Toggle X graph mode
+function toggleXGraphMode() {
+    xGraphMode = xGraphMode === 'xt' ? 'x' : 'xt';
+    return xGraphMode;
 }
