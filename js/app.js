@@ -34,43 +34,56 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+// Helper function to get mouse position relative to canvas
+function getMousePos(canvas, e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+    };
+}
+
 // Mouse event handlers for XY canvas
 xyCanvas.addEventListener('mousedown', (e) => {
-    const rect = xyCanvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const pos = canvasToPhysics(mouseX, mouseY, xyCanvas.height);
+    const mousePos = getMousePos(xyCanvas, e);
+    const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
     
     const dx = pos.x - ball.x;
     const dy = pos.y - ball.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
     
-    if (dist < ball.radius) {
+    console.log('Click detected:', { dist, threshold: ball.radius * 2 }); // Debug
+    
+    if (dist < ball.radius * 2) { // Increased hitbox
         isDragging = true;
         isAnimating = false;
         dragStartX = ball.x;
         dragStartY = ball.y;
+        console.log('Dragging started'); // Debug
     }
 });
 
 xyCanvas.addEventListener('mousemove', (e) => {
     if (isDragging) {
-        const rect = xyCanvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const pos = canvasToPhysics(mouseX, mouseY, xyCanvas.height);
+        const mousePos = getMousePos(xyCanvas, e);
+        const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
         
         ball.x = Math.max(ball.radius, Math.min(10 - ball.radius, pos.x));
         ball.y = Math.max(ball.radius, Math.min(10 - ball.radius, pos.y));
     }
 });
 
-xyCanvas.addEventListener('mouseup', (e) => {
+function handleDragEnd() {
     if (isDragging) {
         ball.vx = (ball.x - dragStartX) * 3;
         ball.vy = (ball.y - dragStartY) * 3;
         isDragging = false;
         isAnimating = true;
+        
+        console.log('Launch velocity:', { vx: ball.vx, vy: ball.vy }); // Debug
         
         // Clear trails for new throw
         xtTrail = [{ t: 0, x: ball.x }];
@@ -78,20 +91,45 @@ xyCanvas.addEventListener('mouseup', (e) => {
         xyTrail = [{ x: ball.x, y: ball.y }];
         time = 0;
     }
+}
+
+xyCanvas.addEventListener('mouseup', handleDragEnd);
+xyCanvas.addEventListener('mouseleave', handleDragEnd);
+
+// Touch support for mobile devices
+xyCanvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const mousePos = getMousePos(xyCanvas, touch);
+    const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
+    
+    const dx = pos.x - ball.x;
+    const dy = pos.y - ball.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    if (dist < ball.radius * 2) {
+        isDragging = true;
+        isAnimating = false;
+        dragStartX = ball.x;
+        dragStartY = ball.y;
+    }
 });
 
-xyCanvas.addEventListener('mouseleave', (e) => {
+xyCanvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
     if (isDragging) {
-        ball.vx = (ball.x - dragStartX) * 3;
-        ball.vy = (ball.y - dragStartY) * 3;
-        isDragging = false;
-        isAnimating = true;
+        const touch = e.touches[0];
+        const mousePos = getMousePos(xyCanvas, touch);
+        const pos = canvasToPhysics(mousePos.x, mousePos.y, xyCanvas.height);
         
-        xtTrail = [{ t: 0, x: ball.x }];
-        ytTrail = [{ t: 0, y: ball.y }];
-        xyTrail = [{ x: ball.x, y: ball.y }];
-        time = 0;
+        ball.x = Math.max(ball.radius, Math.min(10 - ball.radius, pos.x));
+        ball.y = Math.max(ball.radius, Math.min(10 - ball.radius, pos.y));
     }
+});
+
+xyCanvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    handleDragEnd();
 });
 
 // Button event handlers
