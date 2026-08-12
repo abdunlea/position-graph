@@ -1,5 +1,7 @@
 // graphics.js - Drawing functions for all canvases
 
+const AXIS_OFFSET = 30; // Offset for axes from edges
+
 // Draw XY position grid (TOP RIGHT)
 function drawXYGrid(ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -28,21 +30,21 @@ function drawXYGrid(ctx, canvas) {
     
     // X-axis (bottom)
     ctx.beginPath();
-    ctx.moveTo(0, canvas.height);
-    ctx.lineTo(canvas.width, canvas.height);
+    ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
+    ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
     ctx.stroke();
     
     // Y-axis (left)
     ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(0, canvas.height);
+    ctx.moveTo(AXIS_OFFSET, 0);
+    ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
     ctx.stroke();
     
     // Labels
     ctx.fillStyle = '#666';
     ctx.font = 'bold 14px Arial';
-    ctx.fillText('x', canvas.width - 20, canvas.height - 10);
-    ctx.fillText('y', 10, 20);
+    ctx.fillText('x', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
+    ctx.fillText('y', AXIS_OFFSET - 20, 20);
     
     // Draw trail
     if (xyTrail.length > 1) {
@@ -98,8 +100,126 @@ function drawXYGrid(ctx, canvas) {
     }
 }
 
-// Draw Y graph (TOP LEFT) - either y(t) or y-only horizontal
-function drawYGraph(ctx, canvas, mode) {
+// Draw Y Position (TOP LEFT - horizontal bar)
+function drawYPosition(ctx, canvas) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Grid
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    
+    for (let i = 0; i <= 10; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, i * SCALE);
+        ctx.lineTo(canvas.width, i * SCALE);
+        ctx.stroke();
+    }
+    
+    // Current Y position as horizontal bar
+    const yPos = canvas.height - ball.y * SCALE;
+    ctx.strokeStyle = '#FF5722';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, yPos);
+    ctx.lineTo(canvas.width, yPos);
+    ctx.stroke();
+    
+    // Vertical axis
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(AXIS_OFFSET, 0);
+    ctx.lineTo(AXIS_OFFSET, canvas.height);
+    ctx.stroke();
+    
+    // Label
+    ctx.fillStyle = '#666';
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText('y', AXIS_OFFSET - 20, 20);
+    
+    // Ball indicator
+    ctx.fillStyle = '#FF5722';
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, yPos, 10, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Trail dots
+    if (ytTrail.length > 1) {
+        ctx.fillStyle = 'rgba(255, 87, 34, 0.3)';
+        for (let i = 0; i < ytTrail.length; i++) {
+            const y = canvas.height - ytTrail[i].y * SCALE;
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
+// Draw X Position (BOTTOM RIGHT - horizontal bar)
+function drawXPosition(ctx, canvas) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Grid
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 1;
+    
+    for (let i = 0; i <= 10; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * SCALE, 0);
+        ctx.lineTo(i * SCALE, canvas.height);
+        ctx.stroke();
+    }
+    
+    // Current X position as vertical bar
+    const xPos = ball.x * SCALE;
+    ctx.strokeStyle = '#2196F3';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(xPos, 0);
+    ctx.lineTo(xPos, canvas.height);
+    ctx.stroke();
+    
+    // Horizontal axis
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height - AXIS_OFFSET);
+    ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
+    ctx.stroke();
+    
+    // Label
+    ctx.fillStyle = '#666';
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText('x', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
+    
+    // Ball indicator
+    ctx.fillStyle = '#2196F3';
+    ctx.beginPath();
+    ctx.arc(xPos, canvas.height / 2, 10, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Trail dots
+    if (xtTrail.length > 1) {
+        ctx.fillStyle = 'rgba(33, 150, 243, 0.3)';
+        for (let i = 0; i < xtTrail.length; i++) {
+            const x = xtTrail[i].x * SCALE;
+            ctx.beginPath();
+            ctx.arc(x, canvas.height / 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
+// Draw Time Graph (BOTTOM LEFT - toggleable)
+function drawTimeGraph(ctx, canvas, mode) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Grid
@@ -112,41 +232,37 @@ function drawYGraph(ctx, canvas, mode) {
         ctx.lineTo(canvas.width, i * SCALE);
         ctx.stroke();
         
-        if (mode === 'yt') {
-            ctx.beginPath();
-            ctx.moveTo(i * SCALE, 0);
-            ctx.lineTo(i * SCALE, canvas.height);
-            ctx.stroke();
-        }
+        ctx.beginPath();
+        ctx.moveTo(i * SCALE, 0);
+        ctx.lineTo(i * SCALE, canvas.height);
+        ctx.stroke();
     }
     
-    // Axes
     ctx.strokeStyle = '#333';
     ctx.lineWidth = 2;
     
     if (mode === 'yt') {
-        // Y vs Time mode - vertical axis
-        // Horizontal axis (bottom)
+        // Y vs Time
+        // Horizontal axis
         ctx.beginPath();
-        ctx.moveTo(0, canvas.height);
-        ctx.lineTo(canvas.width, canvas.height);
+        ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
+        ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
         ctx.stroke();
         
-        // Vertical axis (left)
+        // Vertical axis
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, canvas.height);
+        ctx.moveTo(AXIS_OFFSET, 0);
+        ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
         ctx.stroke();
         
         // Labels
         ctx.fillStyle = '#666';
         ctx.font = 'bold 14px Arial';
-        ctx.fillText('t', canvas.width - 20, canvas.height - 10);
-        ctx.fillText('y', 10, 20);
+        ctx.fillText('t', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
+        ctx.fillText('y', AXIS_OFFSET - 20, 20);
         
-        // Plot y(t) data
         if (ytTrail.length > 1) {
-            ctx.strokeStyle = '#FF5722';
+            ctx.strokeStyle = '#9C27B0';
             ctx.lineWidth = 2;
             ctx.beginPath();
             for (let i = 0; i < ytTrail.length; i++) {
@@ -160,111 +276,34 @@ function drawYGraph(ctx, canvas, mode) {
             }
             ctx.stroke();
             
-            // Current point
             const lastPoint = ytTrail[ytTrail.length - 1];
-            ctx.fillStyle = '#FF5722';
+            ctx.fillStyle = '#9C27B0';
             ctx.beginPath();
             ctx.arc(lastPoint.t * SCALE, canvas.height - lastPoint.y * SCALE, 5, 0, Math.PI * 2);
             ctx.fill();
         }
-    } else {
-        // Y-only mode - horizontal line matching XY grid
-        // Only horizontal gridlines (already drawn above)
-        
-        // Single horizontal axis at current y position
-        const yPos = canvas.height - ball.y * SCALE;
-        ctx.strokeStyle = '#FF5722';
-        ctx.lineWidth = 3;
+    } else if (mode === 'xt') {
+        // X vs Time
+        // Horizontal axis
         ctx.beginPath();
-        ctx.moveTo(0, yPos);
-        ctx.lineTo(canvas.width, yPos);
+        ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
+        ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
         ctx.stroke();
         
-        // Y-axis (left)
-        ctx.strokeStyle = '#333';
-        ctx.lineWidth = 2;
+        // Vertical axis
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, canvas.height);
-        ctx.stroke();
-        
-        // Label
-        ctx.fillStyle = '#666';
-        ctx.font = 'bold 14px Arial';
-        ctx.fillText('y', 10, 20);
-        
-        // Draw ball position indicator
-        ctx.fillStyle = '#FF5722';
-        ctx.beginPath();
-        ctx.arc(canvas.width / 2, yPos, 8, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        
-        // Draw trail as horizontal dots
-        if (ytTrail.length > 1) {
-            ctx.fillStyle = 'rgba(255, 87, 34, 0.3)';
-            for (let i = 0; i < ytTrail.length; i++) {
-                const y = canvas.height - ytTrail[i].y * SCALE;
-                ctx.beginPath();
-                ctx.arc(canvas.width / 2, y, 3, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-    }
-}
-
-// Draw X graph (BOTTOM RIGHT) - either x(t) or x-only horizontal
-function drawXGraph(ctx, canvas, mode) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Grid
-    ctx.strokeStyle = '#ddd';
-    ctx.lineWidth = 1;
-    
-    for (let i = 0; i <= 10; i++) {
-        ctx.beginPath();
-        ctx.moveTo(0, i * SCALE);
-        ctx.lineTo(canvas.width, i * SCALE);
-        ctx.stroke();
-        
-        if (mode === 'xt') {
-            ctx.beginPath();
-            ctx.moveTo(i * SCALE, 0);
-            ctx.lineTo(i * SCALE, canvas.height);
-            ctx.stroke();
-        }
-    }
-    
-    // Axes
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
-    
-    if (mode === 'xt') {
-        // X vs Time mode - vertical axis
-        // Horizontal axis (bottom)
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height);
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.stroke();
-        
-        // Vertical axis (left)
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, canvas.height);
+        ctx.moveTo(AXIS_OFFSET, 0);
+        ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
         ctx.stroke();
         
         // Labels
         ctx.fillStyle = '#666';
         ctx.font = 'bold 14px Arial';
-        ctx.fillText('t', canvas.width - 20, canvas.height - 10);
-        ctx.fillText('x', 10, 20);
+        ctx.fillText('t', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
+        ctx.fillText('x', AXIS_OFFSET - 20, 20);
         
-        // Plot x(t) data
         if (xtTrail.length > 1) {
-            ctx.strokeStyle = '#2196F3';
+            ctx.strokeStyle = '#9C27B0';
             ctx.lineWidth = 2;
             ctx.beginPath();
             for (let i = 0; i < xtTrail.length; i++) {
@@ -278,58 +317,52 @@ function drawXGraph(ctx, canvas, mode) {
             }
             ctx.stroke();
             
-            // Current point
             const lastPoint = xtTrail[xtTrail.length - 1];
-            ctx.fillStyle = '#2196F3';
+            ctx.fillStyle = '#9C27B0';
             ctx.beginPath();
             ctx.arc(lastPoint.t * SCALE, canvas.height - lastPoint.x * SCALE, 5, 0, Math.PI * 2);
             ctx.fill();
         }
-    } else {
-        // X-only mode - horizontal line matching XY grid
-        // Only horizontal gridlines (already drawn above)
-        
-        // Single horizontal axis at current x position
-        const xPos = canvas.height - ball.x * SCALE;
-        ctx.strokeStyle = '#2196F3';
-        ctx.lineWidth = 3;
+    } else if (mode === 'tx') {
+        // Time vs X
+        // Horizontal axis
         ctx.beginPath();
-        ctx.moveTo(0, xPos);
-        ctx.lineTo(canvas.width, xPos);
+        ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
+        ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
         ctx.stroke();
         
-        // Y-axis (left) 
-        ctx.strokeStyle = '#333';
-        ctx.lineWidth = 2;
+        // Vertical axis
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(0, canvas.height);
+        ctx.moveTo(AXIS_OFFSET, 0);
+        ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
         ctx.stroke();
         
-        // Label
+        // Labels
         ctx.fillStyle = '#666';
         ctx.font = 'bold 14px Arial';
-        ctx.fillText('x', 10, 20);
+        ctx.fillText('x', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
+        ctx.fillText('t', AXIS_OFFSET - 20, 20);
         
-        // Draw ball position indicator
-        ctx.fillStyle = '#2196F3';
-        ctx.beginPath();
-        ctx.arc(canvas.width / 2, xPos, 8, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.strokeStyle = '#fff';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        
-        // Draw trail as horizontal dots
         if (xtTrail.length > 1) {
-            ctx.fillStyle = 'rgba(33, 150, 243, 0.3)';
+            ctx.strokeStyle = '#9C27B0';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
             for (let i = 0; i < xtTrail.length; i++) {
-                const y = canvas.height - xtTrail[i].x * SCALE;
-                ctx.beginPath();
-                ctx.arc(canvas.width / 2, y, 3, 0, Math.PI * 2);
-                ctx.fill();
+                const x = xtTrail[i].x * SCALE;
+                const y = canvas.height - xtTrail[i].t * SCALE;
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
             }
+            ctx.stroke();
+            
+            const lastPoint = xtTrail[xtTrail.length - 1];
+            ctx.fillStyle = '#9C27B0';
+            ctx.beginPath();
+            ctx.arc(lastPoint.x * SCALE, canvas.height - lastPoint.t * SCALE, 5, 0, Math.PI * 2);
+            ctx.fill();
         }
     }
 }

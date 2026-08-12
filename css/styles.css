@@ -35,6 +35,7 @@ h1 {
     grid-template-rows: 1fr 1fr;
     gap: 20px;
     aspect-ratio: 1;
+    margin-bottom: 20px;
 }
 
 .canvas-wrapper {
@@ -42,14 +43,50 @@ h1 {
     border: 2px solid #333;
     border-radius: 8px;
     background: #f8f9fa;
+    display: flex;
+    flex-direction: column;
 }
 
 canvas {
     border-radius: 6px;
     display: block;
     width: 100%;
-    height: 100%;
+    flex: 1;
     cursor: crosshair;
+}
+
+.graph-buttons {
+    display: flex;
+    gap: 5px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 2px solid #ddd;
+    border-radius: 6px 6px 0 0;
+}
+
+.graph-btn {
+    flex: 1;
+    padding: 8px 12px;
+    background: #e0e0e0;
+    color: #555;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.graph-btn:hover {
+    background: #d0d0d0;
+    transform: translateY(-1px);
+}
+
+.graph-btn.active-time {
+    background: #9C27B0;
+    color: white;
+    box-shadow: 0 2px 8px rgba(156, 39, 176, 0.4);
 }
 
 .canvas-label {
@@ -65,39 +102,18 @@ canvas {
     pointer-events: none;
 }
 
-.instructions-box {
-    border: 2px solid #333;
-    border-radius: 8px;
-    background: #e3f2fd;
-    padding: 20px;
+.controls-bar {
     display: flex;
-    flex-direction: column;
     gap: 15px;
-}
-
-.instructions-box h3 {
-    color: #1976d2;
-    margin: 0;
-}
-
-.instructions-box ul {
-    margin-left: 20px;
-    flex: 1;
-}
-
-.instructions-box li {
-    margin: 8px 0;
-    line-height: 1.4;
-}
-
-.controls {
-    display: flex;
-    gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
+    padding: 15px;
+    background: #f0f0f0;
+    border-radius: 8px;
 }
 
 button {
-    padding: 10px 16px;
+    padding: 10px 20px;
     background: #667eea;
     color: white;
     border: none;
@@ -106,8 +122,6 @@ button {
     font-size: 13px;
     font-weight: bold;
     transition: background 0.3s;
-    flex: 1;
-    min-width: 100px;
 }
 
 button:hover {
@@ -119,15 +133,14 @@ button:active {
 }
 
 .info {
+    flex: 1;
+    min-width: 200px;
     font-size: 13px;
     color: #333;
-    background: white;
-    padding: 10px;
-    border-radius: 5px;
 }
 
 .info-row {
-    margin: 4px 0;
+    margin: 3px 0;
 }
 
 .info-label {
@@ -144,5 +157,10 @@ button:active {
     
     .container {
         max-width: 100%;
+    }
+    
+    .graph-btn {
+        font-size: 10px;
+        padding: 6px 8px;
     }
 }

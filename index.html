@@ -11,59 +11,54 @@
     
     <div class="container">
         <div class="grid-container">
-            <!-- Top Left: y(t) vs t (toggleable to y only) -->
+            <!-- Top Left: Y Position (horizontal) -->
             <div class="canvas-wrapper">
-                <canvas id="ytCanvas" width="400" height="400"></canvas>
-                <div class="canvas-label" id="ytLabel">Y vs Time</div>
+                <canvas id="yCanvas" width="400" height="400"></canvas>
             </div>
             
-            <!-- Top Right: y vs x -->
+            <!-- Top Right: XY Position Grid -->
             <div class="canvas-wrapper">
                 <canvas id="xyCanvas" width="400" height="400"></canvas>
-                <div class="canvas-label">XY Position Grid</div>
+                <div class="canvas-label">XY Position</div>
             </div>
             
-            <!-- Bottom Left: Instructions -->
-            <div class="instructions-box">
-                <h3>📖 Instructions</h3>
-                <ul>
-                    <li><strong>Drag the ball</strong> on the XY grid or <strong>click anywhere</strong> to launch it</li>
-                    <li>The <strong>green arrow</strong> shows the velocity vector</li>
-                    <li>Toggle graphs to align horizontally with XY grid</li>
-                    <li>Graphs auto-reset when time exceeds 10 seconds</li>
-                </ul>
-                
-                <div class="controls">
-                    <button id="resetBtn">Reset</button>
-                    <button id="clearTrailBtn">Clear Trail</button>
-                    <button id="switchYBtn">Y Only</button>
-                    <button id="switchXBtn">X Only</button>
-                </div>
-                
-                <div class="info">
-                    <div class="info-row">
-                        <span class="info-label">Position:</span>
-                        <span id="posInfo">x: 5.0m, y: 5.0m</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Velocity:</span>
-                        <span id="velInfo">vx: 0.0m/s, vy: 0.0m/s</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Speed:</span>
-                        <span id="speedInfo">0.0 m/s</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Time:</span>
-                        <span id="timeInfo">0.0 s</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Bottom Right: x(t) vs t (toggleable to x only) -->
+            <!-- Bottom Left: Time Graph (toggleable) -->
             <div class="canvas-wrapper">
-                <canvas id="xtCanvas" width="400" height="400"></canvas>
-                <div class="canvas-label" id="xtLabel">X vs Time</div>
+                <div class="graph-buttons">
+                    <button class="graph-btn active-time" id="btnYT">y(t)</button>
+                    <button class="graph-btn" id="btnXT">x(t)</button>
+                    <button class="graph-btn" id="btnTX">t(x)</button>
+                </div>
+                <canvas id="timeCanvas" width="400" height="400"></canvas>
+            </div>
+            
+            <!-- Bottom Right: X Position (horizontal) -->
+            <div class="canvas-wrapper">
+                <canvas id="xCanvas" width="400" height="400"></canvas>
+            </div>
+        </div>
+        
+        <div class="controls-bar">
+            <button id="resetBtn">Reset</button>
+            <button id="clearTrailBtn">Clear Trail</button>
+            
+            <div class="info">
+                <div class="info-row">
+                    <span class="info-label">Position:</span>
+                    <span id="posInfo">x: 5.0m, y: 5.0m</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Velocity:</span>
+                    <span id="velInfo">vx: 0.0m/s, vy: 0.0m/s</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Speed:</span>
+                    <span id="speedInfo">0.0 m/s</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Time:</span>
+                    <span id="timeInfo">0.0 s</span>
+                </div>
             </div>
         </div>
     </div>

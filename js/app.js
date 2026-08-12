@@ -2,12 +2,14 @@
 
 // Get canvas elements
 const xyCanvas = document.getElementById('xyCanvas');
-const ytCanvas = document.getElementById('ytCanvas');
-const xtCanvas = document.getElementById('xtCanvas');
+const yCanvas = document.getElementById('yCanvas');
+const xCanvas = document.getElementById('xCanvas');
+const timeCanvas = document.getElementById('timeCanvas');
 
 const xyCtx = xyCanvas.getContext('2d');
-const ytCtx = ytCanvas.getContext('2d');
-const xtCtx = xtCanvas.getContext('2d');
+const yCtx = yCanvas.getContext('2d');
+const xCtx = xCanvas.getContext('2d');
+const timeCtx = timeCanvas.getContext('2d');
 
 // Update info display
 function updateInfo() {
@@ -27,8 +29,9 @@ function animate() {
     }
     
     drawXYGrid(xyCtx, xyCanvas);
-    drawYGraph(ytCtx, ytCanvas, yGraphMode);
-    drawXGraph(xtCtx, xtCanvas, xGraphMode);
+    drawYPosition(yCtx, yCanvas);
+    drawXPosition(xCtx, xCanvas);
+    drawTimeGraph(timeCtx, timeCanvas, timeGraphMode);
     updateInfo();
     
     requestAnimationFrame(animate);
@@ -60,7 +63,6 @@ function launchBall(targetX, targetY) {
     isAnimating = true;
     isDragging = false;
     
-    // Clear trails for new throw
     xtTrail = [{ t: 0, x: ball.x }];
     ytTrail = [{ t: 0, y: ball.y }];
     xyTrail = [{ x: ball.x, y: ball.y }];
@@ -77,13 +79,11 @@ xyCanvas.addEventListener('mousedown', (e) => {
     const dist = Math.sqrt(dx * dx + dy * dy);
     
     if (dist < ball.radius * 2) {
-        // Clicked on ball - start dragging
         isDragging = true;
         isAnimating = false;
         dragStartX = ball.x;
         dragStartY = ball.y;
     } else {
-        // Clicked elsewhere - launch ball there
         const targetX = Math.max(ball.radius, Math.min(10 - ball.radius, pos.x));
         const targetY = Math.max(ball.radius, Math.min(10 - ball.radius, pos.y));
         launchBall(targetX, targetY);
@@ -107,7 +107,6 @@ function handleDragEnd() {
         isDragging = false;
         isAnimating = true;
         
-        // Clear trails for new throw
         xtTrail = [{ t: 0, x: ball.x }];
         ytTrail = [{ t: 0, y: ball.y }];
         xyTrail = [{ x: ball.x, y: ball.y }];
@@ -118,7 +117,7 @@ function handleDragEnd() {
 xyCanvas.addEventListener('mouseup', handleDragEnd);
 xyCanvas.addEventListener('mouseleave', handleDragEnd);
 
-// Touch support for mobile devices
+// Touch support
 xyCanvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     const touch = e.touches[0];
@@ -162,32 +161,23 @@ xyCanvas.addEventListener('touchend', (e) => {
 document.getElementById('resetBtn').addEventListener('click', resetSimulation);
 document.getElementById('clearTrailBtn').addEventListener('click', clearTrails);
 
-document.getElementById('switchYBtn').addEventListener('click', () => {
-    const newMode = toggleYGraphMode();
-    const btn = document.getElementById('switchYBtn');
-    const label = document.getElementById('ytLabel');
-    
-    if (newMode === 'y') {
-        btn.textContent = 'Y vs Time';
-        label.textContent = 'Y Position';
-    } else {
-        btn.textContent = 'Y Only';
-        label.textContent = 'Y vs Time';
-    }
+// Time graph mode buttons
+document.getElementById('btnYT').addEventListener('click', () => {
+    setTimeGraphMode('yt');
+    document.querySelectorAll('.graph-btn').forEach(b => b.classList.remove('active-time'));
+    document.getElementById('btnYT').classList.add('active-time');
 });
 
-document.getElementById('switchXBtn').addEventListener('click', () => {
-    const newMode = toggleXGraphMode();
-    const btn = document.getElementById('switchXBtn');
-    const label = document.getElementById('xtLabel');
-    
-    if (newMode === 'x') {
-        btn.textContent = 'X vs Time';
-        label.textContent = 'X Position';
-    } else {
-        btn.textContent = 'X Only';
-        label.textContent = 'X vs Time';
-    }
+document.getElementById('btnXT').addEventListener('click', () => {
+    setTimeGraphMode('xt');
+    document.querySelectorAll('.graph-btn').forEach(b => b.classList.remove('active-time'));
+    document.getElementById('btnXT').classList.add('active-time');
+});
+
+document.getElementById('btnTX').addEventListener('click', () => {
+    setTimeGraphMode('tx');
+    document.querySelectorAll('.graph-btn').forEach(b => b.classList.remove('active-time'));
+    document.getElementById('btnTX').classList.add('active-time');
 });
 
 // Start animation
