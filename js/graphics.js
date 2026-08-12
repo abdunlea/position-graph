@@ -1,7 +1,5 @@
 // graphics.js - Drawing functions for all canvases
 
-const AXIS_OFFSET = 30; // Offset for axes from edges
-
 // Draw XY position grid (TOP RIGHT) - NO AXES
 function drawXYGrid(ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -84,7 +82,7 @@ function drawXYGrid(ctx, canvas) {
     }
 }
 
-// Draw Y Position (TOP LEFT - horizontal bar)
+// Draw Y Position (TOP LEFT - horizontal bar) - NO AXES
 function drawYPosition(ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -108,18 +106,10 @@ function drawYPosition(ctx, canvas) {
     ctx.lineTo(canvas.width, yPos);
     ctx.stroke();
     
-    // Vertical axis
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(AXIS_OFFSET, 0);
-    ctx.lineTo(AXIS_OFFSET, canvas.height);
-    ctx.stroke();
-    
-    // Label
+    // Label only (no axis)
     ctx.fillStyle = '#666';
     ctx.font = 'bold 14px Arial';
-    ctx.fillText('y', AXIS_OFFSET - 20, 20);
+    ctx.fillText('y', 10, 20);
     
     // Ball indicator
     ctx.fillStyle = '#FF5722';
@@ -143,7 +133,7 @@ function drawYPosition(ctx, canvas) {
     }
 }
 
-// Draw X Position (BOTTOM RIGHT - horizontal bar)
+// Draw X Position (BOTTOM RIGHT - vertical bar) - NO AXES
 function drawXPosition(ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -167,18 +157,10 @@ function drawXPosition(ctx, canvas) {
     ctx.lineTo(xPos, canvas.height);
     ctx.stroke();
     
-    // Horizontal axis
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, canvas.height - AXIS_OFFSET);
-    ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
-    ctx.stroke();
-    
-    // Label
+    // Label only (no axis)
     ctx.fillStyle = '#666';
     ctx.font = 'bold 14px Arial';
-    ctx.fillText('x', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
+    ctx.fillText('x', canvas.width - 20, canvas.height - 10);
     
     // Ball indicator
     ctx.fillStyle = '#2196F3';
@@ -202,7 +184,7 @@ function drawXPosition(ctx, canvas) {
     }
 }
 
-// Draw Time Graph (BOTTOM LEFT - toggleable)
+// Draw Time Graph (BOTTOM LEFT - toggleable) - NO AXES
 function drawTimeGraph(ctx, canvas, mode) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -222,28 +204,13 @@ function drawTimeGraph(ctx, canvas, mode) {
         ctx.stroke();
     }
     
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
-    
     if (mode === 'yt') {
         // Y vs Time
-        // Horizontal axis
-        ctx.beginPath();
-        ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-        ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
-        ctx.stroke();
-        
-        // Vertical axis
-        ctx.beginPath();
-        ctx.moveTo(AXIS_OFFSET, 0);
-        ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-        ctx.stroke();
-        
-        // Labels
+        // Labels only (no axes)
         ctx.fillStyle = '#666';
         ctx.font = 'bold 14px Arial';
-        ctx.fillText('t', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
-        ctx.fillText('y', AXIS_OFFSET - 20, 20);
+        ctx.fillText('t', canvas.width - 20, canvas.height - 10);
+        ctx.fillText('y', 10, 20);
         
         if (ytTrail.length > 1) {
             ctx.strokeStyle = '#9C27B0';
@@ -268,23 +235,11 @@ function drawTimeGraph(ctx, canvas, mode) {
         }
     } else if (mode === 'xt') {
         // X vs Time
-        // Horizontal axis
-        ctx.beginPath();
-        ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-        ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
-        ctx.stroke();
-        
-        // Vertical axis
-        ctx.beginPath();
-        ctx.moveTo(AXIS_OFFSET, 0);
-        ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-        ctx.stroke();
-        
-        // Labels
+        // Labels only (no axes)
         ctx.fillStyle = '#666';
         ctx.font = 'bold 14px Arial';
-        ctx.fillText('t', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
-        ctx.fillText('x', AXIS_OFFSET - 20, 20);
+        ctx.fillText('t', canvas.width - 20, canvas.height - 10);
+        ctx.fillText('x', 10, 20);
         
         if (xtTrail.length > 1) {
             ctx.strokeStyle = '#9C27B0';
@@ -309,23 +264,11 @@ function drawTimeGraph(ctx, canvas, mode) {
         }
     } else if (mode === 'tx') {
         // Time vs X
-        // Horizontal axis
-        ctx.beginPath();
-        ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-        ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
-        ctx.stroke();
-        
-        // Vertical axis
-        ctx.beginPath();
-        ctx.moveTo(AXIS_OFFSET, 0);
-        ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-        ctx.stroke();
-        
-        // Labels
+        // Labels only (no axes)
         ctx.fillStyle = '#666';
         ctx.font = 'bold 14px Arial';
-        ctx.fillText('x', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
-        ctx.fillText('t', AXIS_OFFSET - 20, 20);
+        ctx.fillText('x', canvas.width - 20, canvas.height - 10);
+        ctx.fillText('t', 10, 20);
         
         if (xtTrail.length > 1) {
             ctx.strokeStyle = '#9C27B0';
