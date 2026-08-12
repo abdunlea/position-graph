@@ -11,17 +11,6 @@ const yCtx = yCanvas.getContext('2d');
 const xCtx = xCanvas.getContext('2d');
 const timeCtx = timeCanvas.getContext('2d');
 
-// Update info display
-function updateInfo() {
-    document.getElementById('posInfo').textContent = 
-        `x: ${ball.x.toFixed(1)}m, y: ${ball.y.toFixed(1)}m`;
-    document.getElementById('velInfo').textContent = 
-        `vx: ${ball.vx.toFixed(1)}m/s, vy: ${ball.vy.toFixed(1)}m/s`;
-    const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
-    document.getElementById('speedInfo').textContent = `${speed.toFixed(1)} m/s`;
-    document.getElementById('timeInfo').textContent = `${time.toFixed(2)} s`;
-}
-
 // Animation loop
 function animate() {
     if (isAnimating) {
@@ -32,7 +21,6 @@ function animate() {
     drawYPosition(yCtx, yCanvas);
     drawXPosition(xCtx, xCanvas);
     drawTimeGraph(timeCtx, timeCanvas, timeGraphMode);
-    updateInfo();
     
     requestAnimationFrame(animate);
 }
@@ -156,10 +144,6 @@ xyCanvas.addEventListener('touchend', (e) => {
     e.preventDefault();
     handleDragEnd();
 });
-
-// Button event handlers
-document.getElementById('resetBtn').addEventListener('click', resetSimulation);
-document.getElementById('clearTrailBtn').addEventListener('click', clearTrails);
 
 // Time graph mode buttons
 document.getElementById('btnYT').addEventListener('click', () => {

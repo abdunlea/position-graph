@@ -2,7 +2,7 @@
 
 const AXIS_OFFSET = 30; // Offset for axes from edges
 
-// Draw XY position grid (TOP RIGHT)
+// Draw XY position grid (TOP RIGHT) - NO AXES
 function drawXYGrid(ctx, canvas) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -24,27 +24,11 @@ function drawXYGrid(ctx, canvas) {
         ctx.stroke();
     }
     
-    // Axes
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
-    
-    // X-axis (bottom)
-    ctx.beginPath();
-    ctx.moveTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-    ctx.lineTo(canvas.width, canvas.height - AXIS_OFFSET);
-    ctx.stroke();
-    
-    // Y-axis (left)
-    ctx.beginPath();
-    ctx.moveTo(AXIS_OFFSET, 0);
-    ctx.lineTo(AXIS_OFFSET, canvas.height - AXIS_OFFSET);
-    ctx.stroke();
-    
-    // Labels
+    // Labels only (no axes)
     ctx.fillStyle = '#666';
     ctx.font = 'bold 14px Arial';
-    ctx.fillText('x', canvas.width - 20, canvas.height - AXIS_OFFSET + 20);
-    ctx.fillText('y', AXIS_OFFSET - 20, 20);
+    ctx.fillText('x', canvas.width - 20, canvas.height - 10);
+    ctx.fillText('y', 10, 20);
     
     // Draw trail
     if (xyTrail.length > 1) {
