@@ -1,7 +1,13 @@
 // graphics.js - Drawing functions for all canvases
 
+// Calculate scale based on canvas size
+function getScale(canvas) {
+    return canvas.width / 10; // 10 meters across the canvas
+}
+
 // Draw XY position grid (TOP RIGHT) - NO AXES
 function drawXYGrid(ctx, canvas) {
+    const SCALE = getScale(canvas);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Grid lines
@@ -34,21 +40,23 @@ function drawXYGrid(ctx, canvas) {
         ctx.lineWidth = 2;
         ctx.beginPath();
         for (let i = 0; i < xyTrail.length; i++) {
-            const pos = physicsToCanvas(xyTrail[i].x, xyTrail[i].y, canvas.height);
+            const x = xyTrail[i].x * SCALE;
+            const y = canvas.height - xyTrail[i].y * SCALE;
             if (i === 0) {
-                ctx.moveTo(pos.x, pos.y);
+                ctx.moveTo(x, y);
             } else {
-                ctx.lineTo(pos.x, pos.y);
+                ctx.lineTo(x, y);
             }
         }
         ctx.stroke();
     }
     
     // Draw ball
-    const pos = physicsToCanvas(ball.x, ball.y, canvas.height);
+    const ballX = ball.x * SCALE;
+    const ballY = canvas.height - ball.y * SCALE;
     ctx.fillStyle = ball.color;
     ctx.beginPath();
-    ctx.arc(pos.x, pos.y, ball.radius * SCALE, 0, Math.PI * 2);
+    ctx.arc(ballX, ballY, ball.radius * SCALE, 0, Math.PI * 2);
     ctx.fill();
     
     ctx.strokeStyle = '#fff';
@@ -65,18 +73,19 @@ function drawXYGrid(ctx, canvas) {
             ctx.strokeStyle = '#4CAF50';
             ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(pos.x, pos.y);
-            const endPos = physicsToCanvas(ball.x + vx * 0.5, ball.y + vy * 0.5, canvas.height);
-            ctx.lineTo(endPos.x, endPos.y);
+            ctx.moveTo(ballX, ballY);
+            const endX = (ball.x + vx * 0.5) * SCALE;
+            const endY = canvas.height - (ball.y + vy * 0.5) * SCALE;
+            ctx.lineTo(endX, endY);
             ctx.stroke();
             
             // Arrow head
-            const angle = Math.atan2(endPos.y - pos.y, endPos.x - pos.x);
+            const angle = Math.atan2(endY - ballY, endX - ballX);
             ctx.beginPath();
-            ctx.moveTo(endPos.x, endPos.y);
-            ctx.lineTo(endPos.x - 10 * Math.cos(angle - Math.PI / 6), endPos.y - 10 * Math.sin(angle - Math.PI / 6));
-            ctx.moveTo(endPos.x, endPos.y);
-            ctx.lineTo(endPos.x - 10 * Math.cos(angle + Math.PI / 6), endPos.y - 10 * Math.sin(angle + Math.PI / 6));
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - 10 * Math.cos(angle - Math.PI / 6), endY - 10 * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(endX - 10 * Math.cos(angle + Math.PI / 6), endY - 10 * Math.sin(angle + Math.PI / 6));
             ctx.stroke();
         }
     }
@@ -84,6 +93,7 @@ function drawXYGrid(ctx, canvas) {
 
 // Draw Y Position (TOP LEFT - horizontal bar) - NO AXES
 function drawYPosition(ctx, canvas) {
+    const SCALE = getScale(canvas);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Grid
@@ -111,10 +121,10 @@ function drawYPosition(ctx, canvas) {
     ctx.font = 'bold 14px Arial';
     ctx.fillText('y', 10, 20);
     
-    // Ball indicator
+    // Ball indicator - smaller size
     ctx.fillStyle = '#FF5722';
     ctx.beginPath();
-    ctx.arc(canvas.width / 2, yPos, 10, 0, Math.PI * 2);
+    ctx.arc(canvas.width / 2, yPos, ball.radius * SCALE, 0, Math.PI * 2);
     ctx.fill();
     
     ctx.strokeStyle = '#fff';
@@ -135,6 +145,7 @@ function drawYPosition(ctx, canvas) {
 
 // Draw X Position (BOTTOM RIGHT - vertical bar) - NO AXES
 function drawXPosition(ctx, canvas) {
+    const SCALE = getScale(canvas);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Grid
@@ -162,10 +173,10 @@ function drawXPosition(ctx, canvas) {
     ctx.font = 'bold 14px Arial';
     ctx.fillText('x', canvas.width - 20, canvas.height - 10);
     
-    // Ball indicator
+    // Ball indicator - smaller size
     ctx.fillStyle = '#2196F3';
     ctx.beginPath();
-    ctx.arc(xPos, canvas.height / 2, 10, 0, Math.PI * 2);
+    ctx.arc(xPos, canvas.height / 2, ball.radius * SCALE, 0, Math.PI * 2);
     ctx.fill();
     
     ctx.strokeStyle = '#fff';
@@ -186,6 +197,7 @@ function drawXPosition(ctx, canvas) {
 
 // Draw Time Graph (BOTTOM LEFT - toggleable) - NO AXES
 function drawTimeGraph(ctx, canvas, mode) {
+    const SCALE = getScale(canvas);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Grid

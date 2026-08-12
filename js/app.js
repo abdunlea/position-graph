@@ -11,6 +11,38 @@ const yCtx = yCanvas.getContext('2d');
 const xCtx = xCanvas.getContext('2d');
 const timeCtx = timeCanvas.getContext('2d');
 
+let animationStarted = false;
+
+// Resize canvases to fit their containers
+function resizeCanvases() {
+    const canvases = [
+        { canvas: xyCanvas, hasButtons: false },
+        { canvas: yCanvas, hasButtons: false },
+        { canvas: xCanvas, hasButtons: false },
+        { canvas: timeCanvas, hasButtons: true }
+    ];
+    
+    canvases.forEach(({ canvas, hasButtons }) => {
+        const wrapper = canvas.parentElement;
+        const rect = wrapper.getBoundingClientRect();
+        
+        // Account for buttons and borders
+        const buttons = hasButtons ? wrapper.querySelector('.graph-buttons') : null;
+        const buttonHeight = buttons ? buttons.offsetHeight : 0;
+        const borderWidth = 4; // 2px border on each side
+        
+        const availableWidth = rect.width - borderWidth;
+        const availableHeight = rect.height - buttonHeight - borderWidth;
+        
+        const size = Math.min(availableWidth, availableHeight);
+        
+        canvas.width = size;
+        canvas.height = size;
+        canvas.style.width = size + 'px';
+        canvas.style.height = size + 'px';
+    });
+}
+
 // Animation loop
 function animate() {
     if (isAnimating) {
@@ -164,5 +196,33 @@ document.getElementById('btnTX').addEventListener('click', () => {
     document.getElementById('btnTX').classList.add('active-time');
 });
 
-// Start animation
-animate();
+// Initialize function
+function initialize() {
+    resizeCanvases();
+    if (!animationStarted) {
+        animationStarted = true;
+        animate();
+    }
+}
+
+// Handle resize with debounce
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resizeCanvases, 100);
+});
+
+// Multiple initialization attempts to ensure proper sizing
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+} else {
+    initialize();
+}
+
+window.addEventListener('load', () => {
+    setTimeout(initialize, 100);
+});
+
+// Extra initialization after a delay to catch late renders
+setTimeout(initialize, 200);
+setTimeout(initialize, 500);

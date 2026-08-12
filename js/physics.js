@@ -2,9 +2,8 @@
 
 // Physics constants
 const GRAVITY = 9.8; // m/s²
-const SCALE = 40; // pixels per meter
 const DT = 0.016; // time step (60 FPS)
-const MAX_TIME = 10; // Maximum time before reset (10 seconds = 400 pixels)
+const MAX_TIME = 10; // Maximum time before reset (10 seconds)
 
 // Ball state
 const ball = {
@@ -31,6 +30,7 @@ let xyTrail = [];
 
 // Convert canvas coordinates to physics coordinates
 function canvasToPhysics(canvasX, canvasY, canvasWidth, canvasHeight) {
+    const SCALE = canvasWidth / 10;
     return {
         x: canvasX / SCALE,
         y: (canvasHeight - canvasY) / SCALE
@@ -39,6 +39,7 @@ function canvasToPhysics(canvasX, canvasY, canvasWidth, canvasHeight) {
 
 // Convert physics coordinates to canvas coordinates
 function physicsToCanvas(x, y, canvasHeight) {
+    const SCALE = canvasHeight / 10;
     return {
         x: x * SCALE,
         y: canvasHeight - y * SCALE
